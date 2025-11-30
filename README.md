@@ -163,3 +163,94 @@ This project is positioned to be both research-credible and industry-admired.
 ## 📝 Notes
 
 For more details on specific components like the PEFT Fine-Tuning process or the Structured Chain-of-Thought schema, please refer to the respective module documentation or open an issue for discussion.
+
+
+----------
+```
+mimir/
+│
+├── pyproject.toml               # poetry-managed project
+├── README.md                    # project overview + setup
+├── Makefile                     # convenience commands (optional)
+├── .gitignore
+├── .env.example                 # example env vars
+│
+├── configs/                     # all YAML configs
+│   ├── training/
+│   │    ├── sft.yaml
+│   │    ├── lora.yaml
+│   │    └── evaluation.yaml
+│   ├── rag/
+│   │    ├── rag_config.yaml
+│   │    ├── chunking.yaml
+│   │    └── retrieval.yaml
+│   ├── serving/
+│   │    ├── vllm.yaml
+│   │    ├── api.yaml
+│   │    └── quantization.yaml
+│   └── project.yaml
+│
+├── data/
+│   ├── raw/                     # raw logs, SRE docs, incidents
+│   ├── processed/               # cleaned + chunked docs
+│   ├── rag_store/               # embeddings, indices
+│   ├── sft/                     # fine-tuning data in JSONL
+│   │    ├── train.jsonl
+│   │    ├── dev.jsonl
+│   │    └── test.jsonl
+│   └── eval/                    # eval harness datasets
+│
+├── mimir/                       # MAIN PYTHON PACKAGE
+│   ├── __init__.py
+│
+│   ├── config/                  # config loaders
+│   │    ├── loader.py
+│   │    └── schema.py           # pydantic models
+│
+│   ├── data_pipeline/
+│   │    ├── ingest.py           # PDF/text ingestion
+│   │    ├── clean.py            # cleanup + normalization
+│   │    ├── chunk.py            # chunking logic
+│   │    └── embed.py            # embedding + vector DB writer
+│
+│   ├── rag/
+│   │    ├── retriever.py        # vector DB retrieval (Chroma/Qdrant)
+│   │    ├── formatter.py        # context assembly
+│   │    └── ranker.py           # optional rerankers
+│
+│   ├── sft/
+│   │    ├── dataset_prep.py     # CoT dataset builder
+│   │    ├── trainer.py          # TRL SFTTrainer with LoRA/QLoRA
+│   │    └── utils.py
+│
+│   ├── inference/
+│   │    ├── prompt_templates.py
+│   │    ├── generator.py        # openai-like interface
+│   │    └── postprocess.py      # parse COT → final answer
+│
+│   ├── serving/
+│   │    ├── api.py              # FastAPI routes
+│   │    ├── controllers.py      # business logic
+│   │    ├── memory.py           # conversation memory manager
+│   │    └── guardrails.py       # safety layer
+│
+│   ├── evaluation/
+│   │    ├── evaluator.py        # eval harness (base vs RAG vs SFT)
+│   │    ├── metrics.py          # metrics (accuracy, CoT scoring)
+│   │    └── analysis.py         # ablations + reporting
+│
+│   ├── utils/
+│   │    ├── logging.py          # structured logs
+│   │    ├── exceptions.py
+│   │    ├── text.py
+│   │    └── helpers.py
+│
+└── scripts/
+    ├── run_ingest.py
+    ├── run_chunking.py
+    ├── run_embed.py
+    ├── train_sft.py
+    ├── evaluate.py
+    ├── build_rag.py
+    └── serve.py                 # launches API/vLLM/etc.
+```
